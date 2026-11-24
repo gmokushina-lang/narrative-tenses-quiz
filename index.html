@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#edf6f4"><title>Narrative Tenses — квиз</title>
+<style>
+:root{font:100%/1.5 system-ui,sans-serif;background:#edf6f4;color:#182f34}
+*{box-sizing:border-box}
+body{margin:0}
+main{max-width:42rem;margin:auto;padding:clamp(1rem,4vw,2.4rem) 1rem 2rem}
+h1{font-size:clamp(2rem,8vw,3.4rem);line-height:1;letter-spacing:-.05em;margin:.2rem 0 .7rem}
+h2{font-size:clamp(1.25rem,5vw,1.7rem);line-height:1.3;margin:0;overflow-wrap:anywhere}
+p{margin:.45rem 0}
+.subtitle,#hint{color:#425f65}
+.stats{display:flex;justify-content:space-between;gap:.5rem;margin:1.2rem 0 .45rem;font-weight:650}
+progress{display:block;width:100%;height:.5rem;accent-color:#00786d}
+article{margin-top:1rem;padding:clamp(1rem,4vw,1.75rem);border:1px solid #cee0de;background:#fff;border-radius:1.25rem;box-shadow:0 .3rem 1.5rem #123a3912}
+#options{display:grid;gap:.55rem;margin:.8rem 0}
+button{font:inherit;color:inherit;min-height:3rem;width:100%;padding:.55rem .8rem;border:1px solid #aecac6;background:#fff;border-radius:.7rem;cursor:pointer}
+button:disabled{opacity:1;cursor:default}
+.option{text-align:left;display:flex;align-items:center;gap:.7rem}
+.mark{min-width:1.5rem;font-weight:750;color:inherit}
+.correct{background:#e1f5e8;border-color:#2a7950;color:#174d35}
+.wrong{background:#fff0ed;border-color:#ad4437;color:#822e25}
+:focus-visible{outline:3px solid #006f67;outline-offset:3px}
+#feedback:not(:empty){border-left:3px solid #00766e;padding:.1rem .65rem;margin:1rem 0}
+.action{margin-top:.5rem;font-weight:700}
+.primary{background:#00675f;border-color:#00675f;color:white}
+[hidden]{display:none!important}
+</style></head><body><main>
+<header><h1 lang="en">Narrative Tenses</h1><p class="subtitle">Выбери форму глагола. Четыре прошедших времени вперемешку.</p></header>
+<div class="stats"><span id="position"></span><span id="score"></span></div>
+<progress id="progress" aria-label="Выполнено заданий"></progress>
+<article><h2 id="question" tabindex="-1" lang="en"></h2><p id="hint" lang="en"></p>
+<div id="options" lang="en"></div><div id="feedback" role="status"></div>
+<button id="next" class="action primary" hidden>Дальше</button><button id="retry" class="action primary" hidden>Повторить ошибки</button><button id="restart" class="action" hidden>Пройти все 40 заново</button></article>
+</main><script>
+const questions = [{"tense":0,"sentence":"Last Saturday, our team ___ first prize at the science fair.","answer":"won","hint":"win","reason":"Last Saturday указывает на завершённое событие.","options":["won","was winning","had won","had been winning"]},{"tense":2,"sentence":"Nina knew the result because she ___ the email before the meeting began.","answer":"had read","hint":"read","reason":"Сначала Нина прочитала письмо, затем началась встреча.","options":["had read","was reading","had been reading","has read"]},{"tense":1,"sentence":"I ___ a report when the fire alarm went off.","answer":"was writing","hint":"write","reason":"В момент сигнала я был в процессе написания отчёта.","options":["wrote","was writing","had written","had been writing"]},{"tense":3,"sentence":"His hands were covered in paint. He ___ the walls for hours and still had one wall left.","answer":"had been painting","hint":"paint","reason":"Длительное действие до момента в прошлом объясняет, почему руки были в краске.","options":["painted","was painting","had painted","had been painting"]},{"tense":1,"sentence":"At the exact moment the camera flashed, we ___ the heavy box together.","answer":"were lifting","hint":"lift","reason":"Вспышка застала нас в процессе.","options":["lifted","were lifting","had lifted","had been lifting"]},{"tense":0,"sentence":"Where ___ after university in 2019?","answer":"did Emma work","hint":"Emma / work","reason":"Вопрос о завершённом периоде в прошлом.","options":["did Emma work","was Emma work","had Emma work","did Emma worked"]},{"tense":3,"sentence":"By the time the bus finally arrived, we ___ in the rain for nearly an hour and were freezing.","answer":"had been waiting","hint":"wait","reason":"Важно, сколько длилось ожидание к моменту приезда автобуса.","options":["waited","were waiting","had waited","had been waiting"]},{"tense":2,"sentence":"The room was empty when I arrived. My colleagues ___ for the day.","answer":"had already left","hint":"already / leave","reason":"Коллеги ушли раньше, чем я пришёл.","options":["had already left","were already leaving","had already been leaving","have already left"]},{"tense":0,"sentence":"The company ___ ten new employees last March.","answer":"hired","hint":"hire","reason":"Last March задаёт завершённый период в прошлом.","options":["hired","was hiring","had hired","had been hiring"]},{"tense":3,"sentence":"The floor was wet because water ___ from the pipe all night.","answer":"had been leaking","hint":"leak","reason":"Длительная протечка объясняет состояние пола утром.","options":["leaked","was leaking","had leaked","had been leaking"]},{"tense":1,"sentence":"What ___ when the lights suddenly went out?","answer":"were you doing","hint":"you / do","reason":"Вопрос о действии в момент отключения света.","options":["were you doing","did you doing","had you doing","were you do"]},{"tense":2,"sentence":"By the time the shop opened, the owner ___ all the new prices into the system.","answer":"had entered","hint":"enter","reason":"Все цены были внесены к моменту открытия.","options":["entered","was entering","had entered","had been entering"]},{"tense":3,"sentence":"I was out of breath when I reached the station because I ___ the whole way.","answer":"had been running","hint":"run","reason":"Бег до прибытия объясняет, почему я запыхался.","options":["ran","was running","had run","had been running"]},{"tense":0,"sentence":"We ___ the museum yesterday because it was closed.","answer":"didn’t visit","hint":"not / visit","reason":"Yesterday задаёт время завершённого события.","options":["didn’t visit","weren’t visit","hadn’t visit","didn’t visited"]},{"tense":2,"sentence":"Ana couldn’t get into the office because she ___ her key at home.","answer":"had left","hint":"leave","reason":"Ана оставила ключ дома раньше, чем попыталась войти.","options":["left","was leaving","had left","had been leaving"]},{"tense":1,"sentence":"At eight yesterday evening, they ___ dinner. I could hear them chopping vegetables.","answer":"were making","hint":"make","reason":"В восемь часов приготовление ужина было в процессе.","options":["made","were making","had made","had been making"]},{"tense":1,"sentence":"His phone rang while he ___ to a customer and he let it go to voicemail.","answer":"was talking","hint":"talk","reason":"Разговор уже шёл, когда зазвонил телефон.","options":["talked","was talking","had talked","had been talking"]},{"tense":3,"sentence":"By lunchtime, Max’s eyes hurt. He ___ at tiny numbers on the screen since dawn.","answer":"had been staring","hint":"stare","reason":"Работа с утра до обеда объясняет, почему у Макса заболели глаза.","options":["stared","was staring","had stared","had been staring"]},{"tense":2,"sentence":"Before that trip, I ___ snow, so I was amazed when I saw it.","answer":"had never seen","hint":"never / see","reason":"Речь об опыте до поездки.","options":["had never seen","was never seeing","had never saw","did never saw"]},{"tense":0,"sentence":"The inventor ___ her first patent in 2018.","answer":"received","hint":"receive","reason":"In 2018 указывает на время завершённого события.","options":["received","was receiving","had received","had been receiving"]},{"tense":2,"sentence":"I didn’t buy anything at the market because I ___ all my cash earlier that morning.","answer":"had spent","hint":"spend","reason":"Я потратил деньги до похода на рынок.","options":["spent","was spending","had spent","had been spending"]},{"tense":1,"sentence":"The students ___ their models when the teacher walked in and asked them to stop.","answer":"were testing","hint":"test","reason":"Учитель застал учеников за проверкой моделей.","options":["tested","were testing","had tested","had been testing"]},{"tense":0,"sentence":"When ___ school? Was it in 2021 or 2022?","answer":"did Liam finish","hint":"Liam / finish","reason":"Вопрос о дате завершённого события.","options":["did Liam finish","did Liam finished","was Liam finish","had Liam finish"]},{"tense":3,"sentence":"Her throat was sore by the end of the tour because she ___ almost nonstop for two hours.","answer":"had been speaking","hint":"speak","reason":"Указана длительность речи до конца экскурсии.","options":["spoke","was speaking","had spoken","had been speaking"]},{"tense":2,"sentence":"We could present the prototype that morning because we ___ the final test the previous evening.","answer":"had passed","hint":"pass","reason":"Тест прошли накануне, до презентации.","options":["passed","were passing","had passed","had been passing"]},{"tense":3,"sentence":"The ground was muddy when we got to the park. It ___ for most of the night.","answer":"had been raining","hint":"rain","reason":"Продолжительный дождь объясняет, почему земля была грязной.","options":["rained","was raining","had rained","had been raining"]},{"tense":0,"sentence":"On Tuesday, the freelancer ___ her final design to the client.","answer":"sent","hint":"send","reason":"On Tuesday указывает на завершённое действие.","options":["sent","was sending","had sent","had been sending"]},{"tense":1,"sentence":"At the time of the announcement, I ___ home and couldn’t check my phone.","answer":"was driving","hint":"drive","reason":"В момент объявления я был за рулём.","options":["drove","was driving","had driven","had been driving"]},{"tense":3,"sentence":"When the lab closed, the researchers were hungry. They ___ on the same experiment since breakfast without a break.","answer":"had been working","hint":"work","reason":"Работа продолжалась с завтрака до закрытия лаборатории.","options":["worked","were working","had worked","had been working"]},{"tense":2,"sentence":"When the guests arrived, the chef ___ all twelve desserts, so they were ready to serve.","answer":"had finished","hint":"finish","reason":"К приходу гостей все десерты уже были готовы.","options":["finished","was finishing","had finished","had been finishing"]},{"tense":1,"sentence":"I saw Ben through the window. He ___ a broken radio, so I gave him a few minutes to finish.","answer":"was fixing","hint":"fix","reason":"Когда я увидел Бена, ремонт ещё шёл.","options":["fixed","was fixing","had fixed","had been fixing"]},{"tense":0,"sentence":"My aunt ___ to Bristol in 2016.","answer":"moved","hint":"move","reason":"In 2016 задаёт время завершённого переезда.","options":["moved","was moving","had moved","had been moving"]},{"tense":0,"sentence":"I ___ the deadline last Friday, so I handed in my work on Monday instead.","answer":"missed","hint":"miss","reason":"Last Friday указывает на законченное событие.","options":["missed","was missing","had missed","had been missing"]},{"tense":1,"sentence":"When the photo was taken, Mia ___ her hand to ask a question.","answer":"was raising","hint":"raise","reason":"Снимок сделан в момент, когда Мия поднимала руку.","options":["raised","was raising","had raised","had been raising"]},{"tense":2,"sentence":"Tom couldn’t call his boss because his battery ___ before he left the house.","answer":"had died","hint":"die","reason":"Батарея разрядилась ещё до того, как Том вышел из дома.","options":["died","was dying","had died","had been dying"]},{"tense":3,"sentence":"Ella’s back hurt when her shift ended. She ___ boxes since noon.","answer":"had been carrying","hint":"carry","reason":"Длительная работа объясняет боль в спине к концу смены.","options":["carried","was carrying","had carried","had been carrying"]},{"tense":1,"sentence":"When I knocked on the door, you ___ the baby to sleep, so I waited outside.","answer":"were rocking","hint":"rock","reason":"В момент стука ты ещё укачивал ребёнка.","options":["rocked","were rocking","had rocked","had been rocking"]},{"tense":0,"sentence":"The shop ___ its prices twice in 2020.","answer":"raised","hint":"raise","reason":"Подсчитываем завершённые действия за прошедший год.","options":["raised","was raising","had raised","had been raising"]},{"tense":3,"sentence":"The mechanic needed a break. He ___ the same engine for three hours and still hadn’t found the fault.","answer":"had been checking","hint":"check","reason":"Проверка длилась три часа, а результат ещё не был достигнут.","options":["checked","was checking","had checked","had been checking"]},{"tense":2,"sentence":"They couldn’t watch the match because they ___ to book tickets before the deadline.","answer":"had forgotten","hint":"forget","reason":"Они забыли забронировать билеты раньше, чем это помешало им попасть на матч.","options":["forgot","were forgetting","had forgotten","had been forgetting"]}];
+const tenses = ['Past Simple','Past Continuous','Past Perfect','Past Perfect Continuous'];
+const ui = Object.fromEntries(['position','score','progress','question','hint','options','feedback','next','retry','restart'].map(id => [id, document.getElementById(id)]));
+function shuffle(items) {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+let round, index, points, mistakes, answered;
+function updateStats() {
+  ui.score.textContent = 'Верно: ' + points;
+  ui.progress.max = round.length;
+  ui.progress.value = index + Number(answered);
+}
+function render(focus) {
+  const question = round[index];
+  answered = false;
+  updateStats();
+  ui.position.textContent = 'Задание ' + (index + 1) + ' из ' + round.length;
+  ui.question.lang = ui.hint.lang = 'en';
+  ui.question.textContent = question.sentence.replace('___', '_____');
+  ui.hint.textContent = '(' + question.hint + ')';
+  ui.feedback.replaceChildren();
+  ui.next.hidden = ui.retry.hidden = ui.restart.hidden = true;
+  ui.options.replaceChildren(...shuffle(question.options).map((option, i) => {
+    const button = document.createElement('button');
+    button.className = 'option';
+    button.value = option;
+    const mark = document.createElement('span');
+    mark.className = 'mark';
+    mark.textContent = 'ABCD'[i];
+    button.append(mark, option);
+    button.addEventListener('click', () => check(question, button));
+    return button;
+  }));
+  if (focus) ui.question.focus();
+}
+function check(question, selected) {
+  if (answered) return;
+  answered = true;
+  const correct = selected.value === question.answer;
+  if (correct) points++;
+  else mistakes.push(question);
+  for (const button of ui.options.children) {
+    button.disabled = true;
+    if (button.value === question.answer) {
+      button.classList.add('correct');
+      button.firstChild.textContent = '✓';
+    }
+  }
+  if (!correct) {
+    selected.classList.add('wrong');
+    selected.firstChild.textContent = '×';
+  }
+  const result = document.createElement('strong');
+  result.textContent = (correct ? 'Верно! ' : 'Правильный ответ: ') + question.answer + ' · ' + tenses[question.tense];
+  const reason = document.createElement('p');
+  reason.textContent = question.reason;
+  ui.feedback.replaceChildren(result, reason);
+  updateStats();
+  ui.next.textContent = index + 1 === round.length ? 'Показать результат' : 'Дальше';
+  ui.next.hidden = false;
+}
+function finish() {
+  ui.position.textContent = 'Раунд завершён';
+  ui.question.lang = ui.hint.lang = 'ru';
+  ui.question.textContent = points + ' из ' + round.length + ' верно';
+  ui.hint.textContent = mistakes.length ? 'Можно ещё раз пройти задания, в которых были ошибки.' : 'Все ответы правильные!';
+  ui.options.replaceChildren();
+  ui.feedback.replaceChildren();
+  ui.next.hidden = true;
+  ui.retry.hidden = !mistakes.length;
+  ui.restart.hidden = false;
+  ui.question.focus();
+}
+function start(items, focus) {
+  round = shuffle(items);
+  index = points = 0;
+  mistakes = [];
+  render(focus);
+}
+ui.next.addEventListener('click', () => { if (++index === round.length) finish(); else render(true); });
+ui.retry.addEventListener('click', () => start(mistakes, true));
+ui.restart.addEventListener('click', () => start(questions, true));
+start(questions, false);
+</script></body></html>
